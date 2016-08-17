@@ -90,19 +90,19 @@ func AX_Info(resp http.ResponseWriter, req *http.Request) {
 	SendAjaxPayload(resp, req, payload)
 }
 
-type FileInfo struct {
+type LogFileInfo struct {
 	FileName string ` json:"filename"  `
 	Date     string ` json:"date"  `
 	Size     int64  ` json:"size"  `
 }
 
-type FilesPayload struct {
+type LogFilesPayload struct {
 	Success bool       ` json:"success" `
-	Files   []FileInfo ` json:"files" `
+	Files   []LogFileInfo ` json:"files" `
 }
 
-// /ajax/csv-files - Lists abailable csv files
-func AX_CSVFiles(resp http.ResponseWriter, req *http.Request) {
+// /ajax/logfiles - Lists available csv files
+func AX_CSVLogFiles(resp http.ResponseWriter, req *http.Request) {
 
 	// Check directory exists
 	if _, err := os.Stat(Config.CSVDir); os.IsNotExist(err) {
@@ -110,9 +110,9 @@ func AX_CSVFiles(resp http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	payload := new(FilesPayload)
+	payload := new(LogFilesPayload)
 	payload.Success = true
-	payload.Files = make([]FileInfo, 0, 0)
+	payload.Files = make([]LogFileInfo, 0, 0)
 
 	// Read files list into payload
 	files, err := ioutil.ReadDir(Config.CSVDir)
@@ -121,7 +121,7 @@ func AX_CSVFiles(resp http.ResponseWriter, req *http.Request) {
 		return
 	}
 	for _, f := range files {
-		payload.Files = append(payload.Files, FileInfo{FileName: f.Name(),
+		payload.Files = append(payload.Files, LogFileInfo{FileName: f.Name(),
 			Size: f.Size(),
 			Date: f.Name()[8 : len(f.Name())-4]})
 	}

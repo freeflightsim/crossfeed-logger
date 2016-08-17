@@ -22,7 +22,7 @@ func Run(conf ConfigOpts) {
 
 	router.HandleFunc("/ajax/info", AX_Info)
 
-	router.HandleFunc("/ajax/csv-files", AX_CSVFiles)
+	router.HandleFunc("/ajax/csvlogs", AX_CSVLogFiles)
 
 	//router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
 
