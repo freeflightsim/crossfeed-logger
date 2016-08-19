@@ -101,8 +101,39 @@ type LogFilesPayload struct {
 	Files   []LogFileInfo ` json:"files" `
 }
 
-// /ajax/logfiles - Lists available csv files
+// /ajax/csvlogs - Lists available csv files
 func AX_CSVLogFiles(resp http.ResponseWriter, req *http.Request) {
+
+	// Check directory exists
+	if _, err := os.Stat(Config.CSVDir); os.IsNotExist(err) {
+		SendAjaxError(resp, req, errors.New("cvs dir `"+Config.CSVDir+"` does not exist"))
+		return
+	}
+
+	payload := new(LogFilesPayload)
+	payload.Success = true
+	payload.Files = make([]LogFileInfo, 0, 0)
+
+	// Read files list into payload
+	files, err := ioutil.ReadDir(Config.CSVDir)
+	if err != nil {
+		SendAjaxError(resp, req, err)
+		return
+	}
+	for _, f := range files {
+		payload.Files = append(payload.Files, LogFileInfo{FileName: f.Name(),
+			Size: f.Size(),
+			Date: f.Name()[8 : len(f.Name())-4]})
+	}
+
+	SendAjaxPayload(resp, req, payload)
+}
+
+
+
+
+// /ajax/csvlogs/import/{file_name} - Lists available csv files
+func AX_CSVLogFileImport(resp http.ResponseWriter, req *http.Request) {
 
 	// Check directory exists
 	if _, err := os.Stat(Config.CSVDir); os.IsNotExist(err) {

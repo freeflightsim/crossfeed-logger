@@ -1,6 +1,6 @@
 
 
-package cflog
+package cfdb
 
 
 // fid,callsign,lat,lon,alt_ft,model,spd_kts,hdg,dist_nm,update,tot_secs
