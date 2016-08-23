@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/freeflightsim/crossfeed-logger/cfdb"
+	//"github.com/freeflightsim/crossfeed-logger/cfdb"
 	"github.com/freeflightsim/crossfeed-logger/server"
 
 )

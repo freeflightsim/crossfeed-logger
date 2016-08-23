@@ -1,16 +1,15 @@
 package server
 
 import (
-	"errors"
+
 	"net/http"
-	"os"
-
 	"encoding/json"
-	"gopkg.in/yaml.v2"
 
+	"gopkg.in/yaml.v2"
 	"github.com/gorilla/mux"
 
-	"io/ioutil"
+	"github.com/freeflightsim/crossfeed-logger/cvslog"
+	"fmt"
 )
 
 // SendAjaxPayload is the function that sends the http reply
@@ -90,40 +89,26 @@ func AX_Info(resp http.ResponseWriter, req *http.Request) {
 	SendAjaxPayload(resp, req, payload)
 }
 
-type LogFileInfo struct {
-	FileName string ` json:"filename"  `
-	Date     string ` json:"date"  `
-	Size     int64  ` json:"size"  `
-}
+
 
 type LogFilesPayload struct {
 	Success bool       ` json:"success" `
-	Files   []LogFileInfo ` json:"files" `
+	Files   []interface{} ` json:"files" `
 }
 
 // /ajax/csvlogs - Lists available csv files
-func AX_CSVLogFiles(resp http.ResponseWriter, req *http.Request) {
+func AX_CSVListFiles(resp http.ResponseWriter, req *http.Request) {
 
 	// Check directory exists
-	if _, err := os.Stat(Config.CSVDir); os.IsNotExist(err) {
-		SendAjaxError(resp, req, errors.New("cvs dir `"+Config.CSVDir+"` does not exist"))
-		return
-	}
+	var err error
 
 	payload := new(LogFilesPayload)
 	payload.Success = true
-	payload.Files = make([]LogFileInfo, 0, 0)
 
-	// Read files list into payload
-	files, err := ioutil.ReadDir(Config.CSVDir)
+	payload.Files, err = cvslog.CSVList()
 	if err != nil {
 		SendAjaxError(resp, req, err)
 		return
-	}
-	for _, f := range files {
-		payload.Files = append(payload.Files, LogFileInfo{FileName: f.Name(),
-			Size: f.Size(),
-			Date: f.Name()[8 : len(f.Name())-4]})
 	}
 
 	SendAjaxPayload(resp, req, payload)
@@ -133,28 +118,23 @@ func AX_CSVLogFiles(resp http.ResponseWriter, req *http.Request) {
 
 
 // /ajax/csvlogs/import/{file_name} - Lists available csv files
-func AX_CSVLogFileImport(resp http.ResponseWriter, req *http.Request) {
+func AX_CSVImportFile(resp http.ResponseWriter, req *http.Request) {
 
-	// Check directory exists
-	if _, err := os.Stat(Config.CSVDir); os.IsNotExist(err) {
-		SendAjaxError(resp, req, errors.New("cvs dir `"+Config.CSVDir+"` does not exist"))
-		return
-	}
+	vars := mux.Vars(req)
+	file_name := vars["file_name"]
 
+	fmt.Println("file_name=", file_name)
+
+	var err error
 	payload := new(LogFilesPayload)
 	payload.Success = true
-	payload.Files = make([]LogFileInfo, 0, 0)
 
-	// Read files list into payload
-	files, err := ioutil.ReadDir(Config.CSVDir)
+	lines, err := cvslog.ImportFile(file_name)
+
+	//payload.Files, err = cflog.CSVList()
 	if err != nil {
 		SendAjaxError(resp, req, err)
 		return
-	}
-	for _, f := range files {
-		payload.Files = append(payload.Files, LogFileInfo{FileName: f.Name(),
-			Size: f.Size(),
-			Date: f.Name()[8 : len(f.Name())-4]})
 	}
 
 	SendAjaxPayload(resp, req, payload)

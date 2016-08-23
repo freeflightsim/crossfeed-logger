@@ -1,6 +1,6 @@
 # cf-logger
 
-The penultimate logger for pilots, atc, mappers et all..
+The penultimate logger for pilots, ATC, mappers,  et all..
 
 
 Platform

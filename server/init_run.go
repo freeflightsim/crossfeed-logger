@@ -23,8 +23,8 @@ func Run(conf ConfigOpts) {
 	// TODO make this /ajax/* into a subrouter is gut feel
 	router.HandleFunc("/ajax/info", AX_Info)
 
-	router.HandleFunc("/ajax/csvlogs", AX_CSVLogFiles)
-	router.HandleFunc("/ajax/csvlogs/import/{file_name}", AX_CSVLogFileImport)
+	router.HandleFunc("/ajax/csvlogs", AX_CSVListFiles)
+	router.HandleFunc("/ajax/csvlogs/import/{file_name}", AX_CSVImportFile)
 
 	//router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
 

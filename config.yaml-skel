@@ -1,0 +1,6 @@
+http_address: 0.0.0.0:55667
+cvs_dir: /home/ffs/crossfeed-dailies/csv
+db:
+  user: cflog
+  password: cflog
+  database: crosfeed-logger
