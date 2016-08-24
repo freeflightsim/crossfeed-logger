@@ -11,9 +11,8 @@ import (
 )
 
 // Lets go ;-))
-func Run(conf ConfigOpts) {
+func Run() {
 
-	Config = conf
 
 	// Setup www router
 	router := mux.NewRouter()
@@ -26,11 +25,14 @@ func Run(conf ConfigOpts) {
 	router.HandleFunc("/ajax/csvlogs", AX_CSVListFiles)
 	router.HandleFunc("/ajax/csvlogs/import/{file_name}", AX_CSVImportFile)
 
+	router.HandleFunc("/ajax/db/create", AX_DBCreate)
+
+
 	//router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
 
-	fmt.Println("Serving on " + conf.HTTPAddress)
+	fmt.Println("Serving on " + Config.HTTPAddress)
 	http.Handle("/", router)
-	err := http.ListenAndServe(conf.HTTPAddress , nil)
+	err := http.ListenAndServe(Config.HTTPAddress , nil)
 	if err != nil {
 		fmt.Println("HTTP Error: ", err)
 	}

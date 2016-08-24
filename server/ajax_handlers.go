@@ -4,12 +4,14 @@ import (
 
 	"net/http"
 	"encoding/json"
+	"fmt"
 
 	"gopkg.in/yaml.v2"
 	"github.com/gorilla/mux"
 
+	"github.com/freeflightsim/crossfeed-logger/cfdb"
 	"github.com/freeflightsim/crossfeed-logger/cvslog"
-	"fmt"
+
 )
 
 // SendAjaxPayload is the function that sends the http reply
@@ -93,7 +95,7 @@ func AX_Info(resp http.ResponseWriter, req *http.Request) {
 
 type LogFilesPayload struct {
 	Success bool       ` json:"success" `
-	Files   []interface{} ` json:"files" `
+	Files   []cvslog.FileInfo ` json:"files" `
 }
 
 // /ajax/csvlogs - Lists available csv files
@@ -105,7 +107,7 @@ func AX_CSVListFiles(resp http.ResponseWriter, req *http.Request) {
 	payload := new(LogFilesPayload)
 	payload.Success = true
 
-	payload.Files, err = cvslog.CSVList()
+	payload.Files, err = cvslog.ListFiles(Config.CSVDir)
 	if err != nil {
 		SendAjaxError(resp, req, err)
 		return
@@ -129,13 +131,26 @@ func AX_CSVImportFile(resp http.ResponseWriter, req *http.Request) {
 	payload := new(LogFilesPayload)
 	payload.Success = true
 
-	lines, err := cvslog.ImportFile(file_name)
+	_, err = cvslog.ImportFile(Config.CSVDir + "/" + file_name)
 
 	//payload.Files, err = cflog.CSVList()
 	if err != nil {
 		SendAjaxError(resp, req, err)
 		return
 	}
+
+	SendAjaxPayload(resp, req, payload)
+}
+
+
+
+// /ajax/db/create - Creates database tables
+func AX_DBCreate(resp http.ResponseWriter, req *http.Request) {
+
+	 payload := map[string]interface{} {"success": true,
+		 "foo": "bar"}
+
+	cfdb.CreateTables()
 
 	SendAjaxPayload(resp, req, payload)
 }

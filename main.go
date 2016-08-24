@@ -4,34 +4,29 @@ package main
 
 import (
 	"flag"
-	"fmt"
-	"os"
 
-	//"github.com/freeflightsim/crossfeed-logger/cfdb"
+
 	"github.com/freeflightsim/crossfeed-logger/server"
-
+	"github.com/freeflightsim/crossfeed-logger/cfdb"
 )
+
+
 
 
 
 func main() {
 
+	file_path := flag.String("-c", "./config.yaml-skel", "Path to yaml file")
 
-	var conf server.ConfigOpts
+	conf, err := server.LoadConfig(*file_path)
+	if err != nil {
 
-	// The http server address
-	conf.HTTPAddress = *flag.String("listen", "0.0.0.0:55667", "HTTP server address and port")
-
-	// Local of csv dailies
-	conf.CSVDir = *flag.String("csv_dir", "/home/ffs/crossfeed-dailies/csv", "Path to `csv` dir")
-	if _, err := os.Stat(conf.CSVDir); os.IsNotExist(err) {
-		fmt.Println("cvs dir `" + conf.CSVDir + "` does not exist")
-		return
+		panic(err)
 	}
 
-
-
-
-
-	server.Run( conf )
+	err = cfdb.Init(conf.Db.User, conf.Db.Password, conf.Db.Database )
+	if err != nil {
+		panic(err)
+	}
+	server.Run()
 }
