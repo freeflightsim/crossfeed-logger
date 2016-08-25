@@ -3,9 +3,9 @@
 package cfdb
 
 
-var SCHEMA_FLIGHTS  string = `
+var SCHEMA_FLIGHT  string = `
 CREATE TABLE flights (
-	flight_id int64.
+	flight_id int,
 	flight_path geometry(Line,3857),
 	CONSTRAINT flight_id PRIMARY KEY (flight_id)
 )

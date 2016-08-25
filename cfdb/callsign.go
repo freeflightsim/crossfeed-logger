@@ -4,7 +4,7 @@ package cfdb
 
 var SCHEMA_CALLSIGN  string = `
 CREATE TABLE flights (
-	callsign_id int64.
+	callsign_id int,
 	callsign varchar(20),
 	CONSTRAINT flight_id PRIMARY KEY (callsign_id)
 )

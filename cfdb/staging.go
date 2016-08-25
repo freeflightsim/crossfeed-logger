@@ -7,18 +7,22 @@ package cfdb
 
 var SCHEMA_STAGING  string = `
 CREATE TABLE staging (
-	flightid int,
-	callsign char(20),
+    s_id serial NOT NULL,
+    flightid bigint,
+	callsign varchar(20),
 	lat float,
 	lon float,
 	alt_ft int,
-	aero char(20),
+	aero varchar(20),
 	spd_kt int,
 	true_hdg int,
 	dist_nm int,
-	ts datetime,
+	ts timestamp,
 	total_sec int,
-	file_name varchar(255)
+	source varchar(255),
+	source_info varchar(255),
+	row_error varchar(255),
+	CONSTRAINT s_id PRIMARY KEY (s_id)
 )
 WITH (
 	  OIDS=FALSE
@@ -26,11 +30,6 @@ WITH (
 `
 
 
-func CreateStagingTable(file_name string) error {
-
-
-	return nil
-}
 
 
 // cvs columns are
@@ -45,7 +44,7 @@ type DBLogRow struct {
 	SpdKt    string
 	TrueHdg  int
 	DistNm   int64
-	Update   string
+	Timestamp   string
 	TotalSec int64
-	LineNo	int64
+
 }
