@@ -10,10 +10,12 @@ CREATE TABLE staging (
     s_id serial NOT NULL,
     flightid bigint,
 	callsign varchar(20),
+	callsign_id int,
 	lat float,
 	lon float,
 	alt_ft int,
 	aero varchar(20),
+	aero_id int,
 	spd_kt int,
 	true_hdg int,
 	dist_nm int,
@@ -22,13 +24,18 @@ CREATE TABLE staging (
 	source varchar(255),
 	source_info varchar(255),
 	row_error varchar(255),
-	CONSTRAINT s_id PRIMARY KEY (s_id)
+	imported boolean,
+	CONSTRAINT idx_s_id PRIMARY KEY (s_id)
 )
 WITH (
 	  OIDS=FALSE
 );
 `
-
+// Add indexes to staging
+func DBIndexStaging(){
+	DBAddIndex("staging", "callsign_id", "")
+	DBAddIndex("staging", "aero_id", "")
+}
 
 
 

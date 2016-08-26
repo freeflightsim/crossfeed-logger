@@ -4,7 +4,7 @@ package main
 
 import (
 	"flag"
-
+	"fmt"
 
 	"github.com/freeflightsim/crossfeed-logger/server"
 	"github.com/freeflightsim/crossfeed-logger/cfdb"
@@ -20,13 +20,14 @@ func main() {
 
 	conf, err := server.LoadConfig(*file_path)
 	if err != nil {
-
-		panic(err)
+		fmt.Println("HTTP FATAL: " + err.Error())
+		return
 	}
 
 	err = cfdb.Init(conf.Db.User, conf.Db.Password, conf.Db.Database )
 	if err != nil {
-		panic(err)
+		fmt.Println("POSTGRES FATAL: " + err.Error())
+		return
 	}
 	server.Run()
 }

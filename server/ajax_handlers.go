@@ -119,8 +119,8 @@ func AX_CSVListFiles(resp http.ResponseWriter, req *http.Request) {
 
 
 
-// /ajax/csvlogs/import/{file_name} - Lists available csv files
-func AX_CSVImportFile(resp http.ResponseWriter, req *http.Request) {
+// /ajax/csvlogs/stage/{file_name} - Lists available csv files
+func AX_CSVStageFile(resp http.ResponseWriter, req *http.Request) {
 
 	vars := mux.Vars(req)
 	file_name := vars["file_name"]
@@ -131,7 +131,7 @@ func AX_CSVImportFile(resp http.ResponseWriter, req *http.Request) {
 	payload := new(LogFilesPayload)
 	payload.Success = true
 
-	_, err = cvslog.ImportFile(Config.CSVDir + "/" + file_name)
+	_, err = cvslog.StageFile(Config.CSVDir + "/" + file_name)
 
 	//payload.Files, err = cflog.CSVList()
 	if err != nil {
@@ -144,13 +144,22 @@ func AX_CSVImportFile(resp http.ResponseWriter, req *http.Request) {
 
 
 
-// /ajax/db/create - Creates database tables
+// /ajax/admin/db/create - Creates database tables
 func AX_DBCreate(resp http.ResponseWriter, req *http.Request) {
 
-	 payload := map[string]interface{} {"success": true,
-		 "foo": "bar"}
+	 payload := map[string]interface{} {"success": true}
 
-	cfdb.CreateTables()
+	payload["errors"] = cfdb.DBCreateTables()
+
+	SendAjaxPayload(resp, req, payload)
+}
+
+// /ajax/admin/db/info - Info re db
+func AX_DBInfo(resp http.ResponseWriter, req *http.Request) {
+
+	payload := map[string]interface{} {"success": true}
+
+	payload["info"] = cfdb.DBInfo()
 
 	SendAjaxPayload(resp, req, payload)
 }

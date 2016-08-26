@@ -4,10 +4,10 @@ package cfdb
 
 
 var SCHEMA_FLIGHT  string = `
-CREATE TABLE flights (
+CREATE TABLE flight (
 	flight_id int,
-	flight_path geometry(Line,3857),
-	CONSTRAINT flight_id PRIMARY KEY (flight_id)
+	flight_path geometry(LINESTRING,3857),
+	CONSTRAINT idx_flight_id PRIMARY KEY (flight_id)
 )
 WITH (
 	  OIDS=FALSE

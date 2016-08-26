@@ -23,9 +23,11 @@ func Run() {
 	router.HandleFunc("/ajax/info", AX_Info)
 
 	router.HandleFunc("/ajax/csvlogs", AX_CSVListFiles)
-	router.HandleFunc("/ajax/csvlogs/import/{file_name}", AX_CSVImportFile)
+	router.HandleFunc("/ajax/csvlogs/stage/{file_name}", AX_CSVStageFile)
 
-	router.HandleFunc("/ajax/db/create", AX_DBCreate)
+	router.HandleFunc("/ajax/admin/db/info", AX_DBInfo)
+	router.HandleFunc("/ajax/admin/db/create", AX_DBCreate)
+
 
 
 	//router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))

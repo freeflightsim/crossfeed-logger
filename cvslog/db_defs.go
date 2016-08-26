@@ -4,6 +4,7 @@ package cvslog
 
 // cvs columns are
 //  fid,callsign,lat,lon,alt_ft,model,spd_kts,hdg,dist_nm,update,tot_secs
+/*
 type DBLogRow struct {
 	FlightId int64
 	Aero     string
@@ -20,6 +21,6 @@ type DBLogRow struct {
 	FileName string
 }
 
-
+*/
 
 

@@ -1,16 +1,28 @@
 
 
+
 package cfdb
 
+var SCHEMA_AERO  string = `
+CREATE TABLE aero (
+	aero_id serial NOT NULL,
+	aero varchar(20),
+	CONSTRAINT idx_aero_id PRIMARY KEY (aero_id)
+)
+WITH (
+	  OIDS=FALSE
+);
+`
 
-// This struct is worthy of a subclass such are manuf, engines etc
+// Add indexes to callsign table
+func DBIndexAero(){
+	DBAddIndex("aero", "upper(aero)", "aero_upper")
+}
+
+// Database record for a callsign
 type Aero struct {
-	Name string `db:"name"  json:"name" `
-
-	// later
-	//Manuf string
-	//Class string
-	//ModelRepos string `fg:"svn:/fg.fun/sf/repos/foo/bar/here/mymodel.xml" `
-
+	AeroID int64  ``
+	Aero   string
 
 }
+
