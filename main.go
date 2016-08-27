@@ -16,7 +16,8 @@ import (
 
 func main() {
 
-	file_path := flag.String("-c", "./config.yaml-skel", "Path to yaml file")
+	file_path := flag.String("c", "./config.yaml", "Path to yaml file")
+	flag.Parse()
 
 	conf, err := server.LoadConfig(*file_path)
 	if err != nil {
