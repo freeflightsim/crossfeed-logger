@@ -24,9 +24,10 @@ func Run() {
 
 	router.HandleFunc("/ajax/csvlogs", AX_CSVListFiles)
 	router.HandleFunc("/ajax/csvlogs/stage/{file_name}", AX_CSVStageFile)
+	router.HandleFunc("/ajax/csvlogs/import", AX_CSVImport)
 
 	router.HandleFunc("/ajax/admin/db/info", AX_DBInfo)
-	router.HandleFunc("/ajax/admin/db/create", AX_DBCreate)
+	router.HandleFunc("/ajax/admin/db/create", AX_DBCreateAll)
 
 
 

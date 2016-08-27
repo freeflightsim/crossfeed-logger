@@ -142,10 +142,19 @@ func AX_CSVStageFile(resp http.ResponseWriter, req *http.Request) {
 	SendAjaxPayload(resp, req, payload)
 }
 
+// /ajax/csvlogs/import - Imports cvs staged log
+func AX_CSVImport(resp http.ResponseWriter, req *http.Request) {
+
+	payload := map[string]interface{} {"success": true}
+
+	payload["errors"] = cfdb.ImportStaging()
+
+	SendAjaxPayload(resp, req, payload)
+}
 
 
 // /ajax/admin/db/create - Creates database tables
-func AX_DBCreate(resp http.ResponseWriter, req *http.Request) {
+func AX_DBCreateAll(resp http.ResponseWriter, req *http.Request) {
 
 	 payload := map[string]interface{} {"success": true}
 

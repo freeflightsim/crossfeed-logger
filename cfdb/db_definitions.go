@@ -38,19 +38,19 @@ func DBCreateTables() []string {
 		errs = append(errs, e.Error())
 	}
 
-	e = DBCreateTable("staging", SCHEMA_STAGING, true)
+	e = DBCreateTable("staging", SCHEMA_STAGING, false)
 	if e != nil {
 		errs = append(errs, e.Error())
 	}
 	DBIndexStaging()
 
-	e = DBCreateTable("callsign", SCHEMA_CALLSIGN, true)
+	e = DBCreateTable("callsign", SCHEMA_CALLSIGN, false)
 	if e != nil {
 		errs = append(errs, e.Error())
 	}
 	DBIndexCallsign()
 
-	e = DBCreateTable("aero", SCHEMA_AERO, true)
+	e = DBCreateTable("aero", SCHEMA_AERO, false)
 	if e != nil {
 		errs = append(errs, e.Error())
 	}
@@ -123,3 +123,19 @@ func DBAddIndex(table, col, name string){
 
 }
 
+func DBAddUniqueIndex(table, col, name string){
+
+	if name == "" {
+		name = "idx_" + table + "_" + col
+	} else {
+		name = "idx_" + name
+	}
+	sql := "create unique index " + name + " on " + table + "(" + col + ")"
+	res, errc := Dbx.Exec(sql)
+	if errc != nil {
+		fmt.Println("Index Err=", errc)
+	} else {
+		fmt.Println(sql, res)
+	}
+
+}

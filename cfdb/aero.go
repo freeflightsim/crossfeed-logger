@@ -16,7 +16,7 @@ WITH (
 
 // Add indexes to callsign table
 func DBIndexAero(){
-	DBAddIndex("aero", "upper(aero)", "aero_upper")
+	DBAddUniqueIndex("aero", "upper(aero)", "aero_upper")
 }
 
 // Database record for a callsign

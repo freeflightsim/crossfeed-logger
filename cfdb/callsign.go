@@ -15,18 +15,18 @@ WITH (
 
 // Add indexes to callsign table
 func DBIndexCallsign(){
-	DBAddIndex("callsign", "upper(callsign)", "callsign_upper")
+	DBAddUniqueIndex("callsign", "upper(callsign)", "callsign_upper")
 }
 
 // Database record for a callsign
-type CallSign struct {
-	ID int64  ``
-	CallSign   string
+type Callsign struct {
+	CallsignID int64  ` db:"callsign_id" `
+	Callsign   string  ` db:"callsign" `
 
 }
 
 
-func GetCallSigns(){
+func GetCallsigns(){
 
 }
 

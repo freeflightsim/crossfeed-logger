@@ -2,10 +2,15 @@
 
 package cfdb
 
+import (
+	"fmt"
+	"database/sql"
+
+)
 
 var SCHEMA_FLIGHT  string = `
 CREATE TABLE flight (
-	flight_id int,
+	flight_id bigint,
 	flight_path geometry(LINESTRING,3857),
 	CONSTRAINT idx_flight_id PRIMARY KEY (flight_id)
 )
@@ -22,12 +27,18 @@ type Flight struct {
 
 
 // Return info about a flight
-func GetFlightInfo(flight_id int64)(Flight, error){
+func GetFlight(flight_id int64)(*Flight, error){
 
-	var fl Flight
-	//var err error
-	//err = db.Get(&fl, "select from flights where flght_id = ?", flight_id)
-
+	fl := new(Flight)
+	var err error
+	q := " select flight_id "
+	q += " from flight where flight_id = $1"
+	err = Dbx.Get(fl, q, flight_id)
+	//err = row.Scan(fl)
+	if err == sql.ErrNoRows {
+		fmt.Println("NOT FOUNC", err)
+		return nil, nil
+	}
 	return fl, nil
 
 }
