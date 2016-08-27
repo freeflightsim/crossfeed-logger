@@ -11,7 +11,7 @@ import (
 var SCHEMA_FLIGHT  string = `
 CREATE TABLE flight (
 	flight_id bigint,
-	flight_path geometry(LINESTRING,3857),
+	flight_path geometry(MultiPointZM, 4326),
 	CONSTRAINT idx_flight_id PRIMARY KEY (flight_id)
 )
 WITH (

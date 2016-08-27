@@ -4,6 +4,7 @@ package cfdb
 
 import (
 	"fmt"
+	"strings"
 )
 
 
@@ -49,12 +50,12 @@ func ImportStaging() []string {
 	//var sql string
 	ret := make([]string, 0)
 
+
+	//importAeros()
+	//importCallsigns()
+
 	importFlights()
 	return ret
-	importAeros()
-	importCallsigns()
-
-
 
 	return ret
 }
@@ -98,7 +99,10 @@ func importFlight(f_id int64) []string {
 		fmt.Println("Err=", err, sql)
 		ret = append(ret, err.Error() )
 	}
-	fmt.Println("rows=", len(rows))
+	fmt.Println("points=", len(rows))
+	if len(rows) < 500 {
+		return ret
+	}
 
 	// Check if flight already exists
 	var flight *Flight
@@ -117,7 +121,32 @@ func importFlight(f_id int64) []string {
 			ret = append(ret, err.Error() )
 		}
 	}
+	//var p string
+	points := make([]string, 0)
+	for idx, r := range rows {
+		//p := Make4dPoint(r.Lat, r.Lon, r.AltFt, r.SpdKt)
+		p := fmt.Sprintf("%f %f %d %s", r.Lon, r.Lat, r.AltFt, r.SpdKt)
+		//if err != nil {
+		//fmt.Println("Point",p)
+		//}
+		if idx == 3 {
+			//break
+		}
+		points = append(points, p )
+	}
+	//fmt.Println("points", points)
+	line := "ST_GeomFromText('SRID=4326;MULTIPOINT("
+	line += strings.Join(points, ",")
+	line += ")' ) "
+	//fmt.Println(line)
 
+	sql = "update flight set flight_path= " + line
+	sql += " where flight_id = $1"
+	_, err = Dbx.Exec(sql,  flight.FlightID)
+	if err != nil {
+		fmt.Println("Err=", err, "\n\n", sql)
+		ret = append(ret, err.Error() )
+	}
 	return ret
 }
 
@@ -129,20 +158,25 @@ func importFlights() []string {
 	ret := make([]string, 0)
 
 	// get unstaged Flights
-	var row DBStagingRow
+	rows := []DBStagingRow{}
 	sql = "select distinct(flightid) from staging "
 	sql += " where imported is null "
 	sql += " and aero_id is not null "
 	sql += " and callsign_id is not null "
-	sql += " limit 1 "
-	err = Dbx.Get(&row, sql)
+	//sql += " limit 9 "
+	err = Dbx.Select(&rows, sql)
 	if err != nil {
 		fmt.Println("Err=", err, sql)
 		ret = append(ret, err.Error() )
 	}
-	fmt.Println("row=", row, row.Callsign)
-
-	importFlight(row.FlightID)
+	fmt.Println("FLIGHTS=",  len(rows))
+	for idx, row := range rows {
+		importFlight(row.FlightID)
+		if idx == 10 {
+			//return ret
+		}
+	}
+	fmt.Println("FLights Done")
 	return ret
 }
 
@@ -177,7 +211,7 @@ func importAeros() [] string {
 			ret = append(ret, err.Error() )
 		}
 		if idx == 4 {
-			break
+			//break
 		}
 	}
 
@@ -227,7 +261,7 @@ func importCallsigns() [] string {
 			ret = append(ret, err.Error() )
 		}
 		if idx == 4 {
-			break
+			//break
 		}
 	}
 
