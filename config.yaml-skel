@@ -1,3 +1,4 @@
+secret: cflog
 http_address: 0.0.0.0:7788
 csv_dir: /home/ffs/crossfeed-dailies/csv
 db:

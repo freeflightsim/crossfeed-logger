@@ -38,25 +38,34 @@ func DBCreateTables() []string {
 		errs = append(errs, e.Error())
 	}
 
+	// Staging
 	e = DBCreateTable("staging", SCHEMA_STAGING, false)
 	if e != nil {
 		errs = append(errs, e.Error())
 	}
 	DBIndexStaging()
 
+	// Callsign
 	e = DBCreateTable("callsign", SCHEMA_CALLSIGN, false)
 	if e != nil {
 		errs = append(errs, e.Error())
 	}
 	DBIndexCallsign()
 
+	// aeros
 	e = DBCreateTable("aero", SCHEMA_AERO, false)
 	if e != nil {
 		errs = append(errs, e.Error())
 	}
 	DBIndexAero()
 
-	e = DBCreateTable("flight", SCHEMA_FLIGHT, true)
+	// flights
+	e = DBCreateTable("flight", SCHEMA_FLIGHT, false)
+	if e != nil {
+		errs = append(errs, e.Error())
+	}
+
+	_, e = Dbx.Exec(VIEW_CALLSIGN)
 	if e != nil {
 		errs = append(errs, e.Error())
 	}

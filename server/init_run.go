@@ -29,6 +29,11 @@ func Run() {
 	router.HandleFunc("/ajax/admin/db/info", AX_DBInfo)
 	router.HandleFunc("/ajax/admin/db/create", AX_DBCreateAll)
 
+	router.HandleFunc("/ajax/callsigns", AX_Callsigns)
+	router.HandleFunc("/ajax/callsign/{callsign}", AX_Callsign)
+
+
+
 
 
 	//router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))

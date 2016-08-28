@@ -93,7 +93,8 @@ func importFlight(f_id int64) []string {
 
 	rows := []DBStagingRow{}
 	sql = "select * from staging "
-	sql += " where flightid = $1"
+	sql += " where flightid = $1 "
+	sql += " order by ts asc "
 	err = Dbx.Select(&rows, sql, f_id)
 	if err != nil {
 		fmt.Println("Err=", err, sql)
@@ -108,14 +109,16 @@ func importFlight(f_id int64) []string {
 	var flight *Flight
 	flight, err = GetFlight(f_id)
 	if flight == nil {
+		r := rows[0] // get first row
+
 		flight = new(Flight)
 		flight.FlightID = f_id
 		sql := " insert into flight("
-		sql += "flight_id"
+		sql += "flight_id, callsign_id, aero_id "
 		sql += ") values ("
-		sql += "$1 "
+		sql += "$1, $2, $3"
 		sql += ")"
-		_, err = Dbx.Exec(sql, flight.FlightID)
+		_, err = Dbx.Exec(sql, flight.FlightID, r.CallsignID, r.AeroID)
 		if err != nil {
 			fmt.Println("Err=", err, sql)
 			ret = append(ret, err.Error() )
@@ -241,7 +244,7 @@ func importCallsigns() [] string {
 	ret := make([]string, 0)
 
 	/// get unidentifies callsigns from staging
-	callsigns := []Callsign{}
+	callsigns := []CallsignRow{}
 	sql = "select distinct(callsign) as callsign from staging "
 	sql += " where imported is null  and callsign_id is null "
 	err = Dbx.Select(&callsigns, sql)

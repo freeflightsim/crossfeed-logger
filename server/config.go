@@ -15,6 +15,7 @@ var Config ConfigOpts
 
 // Yaml file reader
 type ConfigOpts struct {
+	Secret string ` yaml:"secret" `
 	HTTPAddress string ` yaml:"http_address" `
 	CSVDir string ` yaml:"csv_dir" `
 	Db  DBConfig  ` yaml:"db" `

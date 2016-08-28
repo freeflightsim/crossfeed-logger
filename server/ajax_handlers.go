@@ -172,3 +172,25 @@ func AX_DBInfo(resp http.ResponseWriter, req *http.Request) {
 
 	SendAjaxPayload(resp, req, payload)
 }
+
+
+// /ajax/callsigns - All Callsigns
+func AX_Callsigns(resp http.ResponseWriter, req *http.Request) {
+
+	payload := map[string]interface{} {"success": true}
+
+	payload["callsigns"] = cfdb.GetCallsigns()
+
+	SendAjaxPayload(resp, req, payload)
+}
+
+
+// /ajax/callsign/{callsign} - Callsign specific
+func AX_Callsign(resp http.ResponseWriter, req *http.Request) {
+
+	payload := map[string]interface{} {"success": true}
+
+	payload["info"] = cfdb.DBInfo()
+
+	SendAjaxPayload(resp, req, payload)
+}
